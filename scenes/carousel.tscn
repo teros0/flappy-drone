@@ -1,0 +1,44 @@
+[gd_scene format=3 uid="uid://orphofsqyd7e"]
+
+[ext_resource type="Script" uid="uid://cxak7bid0no7u" path="res://scripts/carousel.gd" id="1_80t8l"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_80t8l"]
+size = Vector2(100, 100)
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_80t8l"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_oa6wo"]
+size = Vector2(100, 100)
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_oa6wo"]
+
+[node name="Carousel" type="Node2D" unique_id=890003029]
+script = ExtResource("1_80t8l")
+rotation_speed = 2
+
+[node name="Static" type="StaticBody2D" parent="." unique_id=780813535]
+position = Vector2(-300, 0)
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Static" unique_id=1940201607]
+shape = SubResource("RectangleShape2D_80t8l")
+
+[node name="Sprite2D" type="Sprite2D" parent="Static" unique_id=192437116]
+texture = SubResource("PlaceholderTexture2D_80t8l")
+region_enabled = true
+region_rect = Rect2(0, 0, 100, 100)
+
+[node name="Static2" type="StaticBody2D" parent="." unique_id=1607545236]
+position = Vector2(300, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Static2" unique_id=1501127562]
+shape = SubResource("RectangleShape2D_oa6wo")
+
+[node name="Sprite2D" type="Sprite2D" parent="Static2" unique_id=562336268]
+texture = SubResource("PlaceholderTexture2D_oa6wo")
+region_enabled = true
+region_rect = Rect2(0, 0, 100, 100)
+
+[node name="VisibleOnScreenEnabler2D" type="VisibleOnScreenEnabler2D" parent="." unique_id=854776687]
+
+[connection signal="screen_exited" from="VisibleOnScreenEnabler2D" to="." method="_on_visible_on_screen_enabler_2d_screen_exited"]

@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://6up1jwbf3ebk"]
+
+[ext_resource type="Script" uid="uid://bunye64onlv2t" path="res://scripts/camera_system.gd" id="1_y75u8"]
+[ext_resource type="Script" uid="uid://sc3k0lsj58x3" path="res://scripts/camera_2d.gd" id="2_fyf37"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_y75u8"]
+
+[node name="CameraSystem" type="Node2D" unique_id=1847921598]
+script = ExtResource("1_y75u8")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=687491392]
+position = Vector2(1200, 675)
+editor_draw_limits = true
+script = ExtResource("2_fyf37")
+
+[node name="LeftEdgeDetector" type="Area2D" parent="." unique_id=1443158066]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LeftEdgeDetector" unique_id=1628259700]
+shape = SubResource("RectangleShape2D_y75u8")

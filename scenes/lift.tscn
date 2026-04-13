@@ -1,0 +1,40 @@
+[gd_scene format=3 uid="uid://buyam18xg0re"]
+
+[ext_resource type="Script" uid="uid://bhmxmwgemkkkw" path="res://scripts/lift.gd" id="1_j52kc"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1xxv8"]
+size = Vector2(400, 40)
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_1xxv8"]
+size = Vector2(400, 40)
+
+[node name="Lift" type="Node2D" unique_id=598349788]
+
+[node name="Left" type="StaticBody2D" parent="." unique_id=2079206150]
+script = ExtResource("1_j52kc")
+speed = 400.0
+top_limit = 200.0
+bottom_limit = 1300.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Left" unique_id=2131407514]
+position = Vector2(-200, 0)
+shape = SubResource("RectangleShape2D_1xxv8")
+
+[node name="Sprite2D" type="Sprite2D" parent="Left" unique_id=1046721309]
+position = Vector2(-200, 0)
+texture = SubResource("PlaceholderTexture2D_1xxv8")
+
+[node name="Right" type="StaticBody2D" parent="." unique_id=1063960746]
+script = ExtResource("1_j52kc")
+speed = 400.0
+direction = -1
+top_limit = 200.0
+bottom_limit = 1300.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Right" unique_id=201687520]
+position = Vector2(200, 0)
+shape = SubResource("RectangleShape2D_1xxv8")
+
+[node name="Sprite2D" type="Sprite2D" parent="Right" unique_id=593894155]
+position = Vector2(200, 0)
+texture = SubResource("PlaceholderTexture2D_1xxv8")

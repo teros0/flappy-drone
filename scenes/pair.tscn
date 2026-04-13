@@ -1,0 +1,57 @@
+[gd_scene format=3 uid="uid://bruqmb5yosrg5"]
+
+[ext_resource type="Script" uid="uid://dfb5tvxxnhmt5" path="res://scripts/pair.gd" id="1_ag0sh"]
+[ext_resource type="PackedScene" uid="uid://cdayq1615h4k7" path="res://scenes/copter.tscn" id="1_qbmen"]
+
+[node name="PlayerPair" type="Node2D" unique_id=997607876]
+script = ExtResource("1_ag0sh")
+
+[node name="Copter" parent="." unique_id=2008944575 instance=ExtResource("1_qbmen")]
+
+[node name="TopGhost" type="Node2D" parent="." unique_id=1790401054]
+position = Vector2(0, -1500)
+
+[node name="Top" type="ColorRect" parent="TopGhost" unique_id=1781767268]
+offset_left = -125.0
+offset_top = -25.0
+offset_right = 125.0
+color = Color(0, 0.36078432, 1, 1)
+metadata/_edit_use_anchors_ = true
+
+[node name="Bottom" type="ColorRect" parent="TopGhost" unique_id=406987259]
+offset_left = -125.0
+offset_right = 125.0
+offset_bottom = 25.0
+color = Color(1, 0.77254903, 0, 1)
+metadata/_edit_use_anchors_ = true
+
+[node name="BottomGhost" type="Node2D" parent="." unique_id=1090644726]
+position = Vector2(0, 1500)
+
+[node name="Top" type="ColorRect" parent="BottomGhost" unique_id=984354206]
+offset_left = -125.0
+offset_top = -25.0
+offset_right = 125.0
+color = Color(0, 0.36078432, 1, 1)
+metadata/_edit_use_anchors_ = true
+
+[node name="Bottom" type="ColorRect" parent="BottomGhost" unique_id=1835951570]
+offset_left = -125.0
+offset_right = 125.0
+offset_bottom = 25.0
+color = Color(1, 0.77254903, 0, 1)
+metadata/_edit_use_anchors_ = true
+
+[node name="Top2" type="ColorRect" parent="BottomGhost" unique_id=738028928]
+offset_left = -125.0
+offset_top = -25.0
+offset_right = 125.0
+color = Color(0, 0.36078432, 1, 1)
+metadata/_edit_use_anchors_ = true
+
+[node name="Bottom2" type="ColorRect" parent="BottomGhost" unique_id=36286618]
+offset_left = -125.0
+offset_right = 125.0
+offset_bottom = 25.0
+color = Color(1, 0.77254903, 0, 1)
+metadata/_edit_use_anchors_ = true

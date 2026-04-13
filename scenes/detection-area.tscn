@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://dqyak8nrti1sa"]
+
+[ext_resource type="Script" uid="uid://brwr4xdtw1kdq" path="res://scripts/detection-area.gd" id="1_xxgf6"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xxgf6"]
+size = Vector2(25, 200)
+
+[sub_resource type="Gradient" id="Gradient_y4f30"]
+offsets = PackedFloat32Array(0, 0.9066265, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0.75, 0.75, 0.75, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_iuee5"]
+gradient = SubResource("Gradient_y4f30")
+width = 25
+height = 200
+
+[node name="DetectionArea" type="Area2D" unique_id=394713280]
+script = ExtResource("1_xxgf6")
+target_size = Vector2(25, 200)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1099676327]
+shape = SubResource("RectangleShape2D_xxgf6")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1133364912]
+texture = SubResource("GradientTexture2D_iuee5")
+region_rect = Rect2(0, 0, 30, 100)
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

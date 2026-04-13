@@ -1,0 +1,76 @@
+[gd_scene format=3 uid="uid://f2n7i1j3f8it"]
+
+[ext_resource type="Script" uid="uid://ddvy2eqi05na" path="res://scripts/main.gd" id="1_choun"]
+[ext_resource type="PackedScene" uid="uid://dqyak8nrti1sa" path="res://scenes/detection-area.tscn" id="2_0xm2m"]
+[ext_resource type="PackedScene" uid="uid://bruqmb5yosrg5" path="res://scenes/pair.tscn" id="2_ya4ey"]
+[ext_resource type="PackedScene" uid="uid://6up1jwbf3ebk" path="res://scenes/camera_system.tscn" id="3_h2yge"]
+[ext_resource type="PackedScene" uid="uid://cwm8kqjtqwp0n" path="res://scenes/wall.tscn" id="4_1bvp3"]
+[ext_resource type="Script" uid="uid://ccto8007rw3tg" path="res://scripts/procedural_manager.gd" id="5_lquwl"]
+[ext_resource type="PackedScene" uid="uid://dkhcapdi6g26r" path="res://scenes/construct.tscn" id="5_tipki"]
+[ext_resource type="PackedScene" uid="uid://orphofsqyd7e" path="res://scenes/carousel.tscn" id="6_7mycd"]
+[ext_resource type="PackedScene" uid="uid://buyam18xg0re" path="res://scenes/lift.tscn" id="7_o6xl0"]
+[ext_resource type="PackedScene" uid="uid://dpqdmaohmfge8" path="res://scenes/soldier.tscn" id="8_tipki"]
+[ext_resource type="AudioStream" uid="uid://dclucgws7wmon" path="res://hotline_miami_02. M.O.O.N - Hydrogen.mp3" id="11_ya4ey"]
+
+[node name="Main" type="Node2D" unique_id=2085253712]
+script = ExtResource("1_choun")
+
+[node name="PlayerPair" parent="." unique_id=997607876 instance=ExtResource("2_ya4ey")]
+position = Vector2(1041, 371)
+
+[node name="Detect1" parent="." unique_id=394713280 instance=ExtResource("2_0xm2m")]
+visible = false
+position = Vector2(1041, 371)
+scale = Vector2(1, 5.32)
+
+[node name="Detect2" parent="." unique_id=297472663 instance=ExtResource("2_0xm2m")]
+visible = false
+position = Vector2(1493, 61)
+scale = Vector2(1, 1.7370923)
+
+[node name="Detect3" parent="." unique_id=2046889145 instance=ExtResource("2_0xm2m")]
+visible = false
+position = Vector2(1493, 731)
+scale = Vector2(1, 1.7370923)
+
+[node name="CameraSystem" parent="." unique_id=1847921598 instance=ExtResource("3_h2yge")]
+visible = false
+scroll_speed = 250.0
+
+[node name="ProceduralManager" type="Node2D" parent="." unique_id=2115554532]
+script = ExtResource("5_lquwl")
+obstacle_scene = ExtResource("5_tipki")
+carousel_scene = ExtResource("6_7mycd")
+lift_scene = ExtResource("7_o6xl0")
+soldier_scene = ExtResource("8_tipki")
+walls_scene = ExtResource("4_1bvp3")
+
+[node name="Ceiling" parent="." unique_id=885982045 instance=ExtResource("4_1bvp3")]
+process_mode = 4
+visible = false
+
+[node name="Floor" parent="." unique_id=371298620 instance=ExtResource("4_1bvp3")]
+process_mode = 4
+visible = false
+position = Vector2(0, 1350)
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=63915258]
+stream = ExtResource("11_ya4ey")
+volume_db = -25.0
+
+[node name="HUD" type="CanvasLayer" parent="." unique_id=1103129030]
+
+[node name="ThrottleBar" type="ProgressBar" parent="HUD" unique_id=1792987732]
+offset_left = 23.0
+offset_top = 66.0
+offset_right = 27.0
+offset_bottom = 93.0
+size_flags_horizontal = 10
+size_flags_vertical = 2
+indeterminate = true
+editor_preview_indeterminate = false
+
+[node name="Label" type="Label" parent="HUD" unique_id=1798767414]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "AAAAAAAAAA"

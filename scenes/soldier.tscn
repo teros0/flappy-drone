@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://dpqdmaohmfge8"]
+
+[ext_resource type="Script" uid="uid://c5uqi06nuvahl" path="res://scripts/soldier.gd" id="1_3ekc7"]
+[ext_resource type="PackedScene" uid="uid://cdecogviq23nw" path="res://scenes/bullet.tscn" id="2_q2rr1"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_q2rr1"]
+size = Vector2(20, 20)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_3ekc7"]
+radius = 1000.0
+
+[node name="Soldier" type="Node2D" unique_id=167977945]
+script = ExtResource("1_3ekc7")
+bullet_scene = ExtResource("2_q2rr1")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=559007531]
+texture = SubResource("PlaceholderTexture2D_q2rr1")
+
+[node name="Muzzle" type="Marker2D" parent="." unique_id=1082899465]
+
+[node name="DetectionRange" type="Area2D" parent="." unique_id=396992304]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionRange" unique_id=1437725432]
+shape = SubResource("CircleShape2D_3ekc7")
+
+[node name="BurstTimer" type="Timer" parent="." unique_id=1022184226]
+
+[node name="CooldownTimer" type="Timer" parent="." unique_id=557221470]

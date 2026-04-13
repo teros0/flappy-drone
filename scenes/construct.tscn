@@ -1,0 +1,50 @@
+[gd_scene format=3 uid="uid://dkhcapdi6g26r"]
+
+[ext_resource type="Script" uid="uid://dgd7j2ehwjm0l" path="res://scripts/construct.gd" id="1_lsbm4"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_oh6kn"]
+size = Vector2(100, 500)
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_xxgf6"]
+size = Vector2(25, 400)
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_oh6kn"]
+b = Vector2(0, 17.670452)
+
+[node name="Construct" type="Node2D" unique_id=885982045]
+script = ExtResource("1_lsbm4")
+
+[node name="Up" type="StaticBody2D" parent="." unique_id=1207762090]
+position = Vector2(0, -500)
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Up" unique_id=2120489518]
+shape = SubResource("RectangleShape2D_oh6kn")
+
+[node name="Sprite2D" type="Sprite2D" parent="Up" unique_id=1949165727]
+texture = SubResource("PlaceholderTexture2D_xxgf6")
+
+[node name="Down" type="StaticBody2D" parent="." unique_id=650108534]
+position = Vector2(0, 500)
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Down" unique_id=2146751698]
+shape = SubResource("RectangleShape2D_oh6kn")
+
+[node name="Sprite2D" type="Sprite2D" parent="Down" unique_id=483756122]
+texture = SubResource("PlaceholderTexture2D_xxgf6")
+
+[node name="Collider" type="Area2D" parent="." unique_id=463040864]
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Collider" unique_id=1967883521]
+position = Vector2(10, -69)
+scale = Vector2(1, 128.2222)
+shape = SubResource("SegmentShape2D_oh6kn")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="." unique_id=642155193]
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1151438138]
+
+[connection signal="body_entered" from="Collider" to="." method="_on_collider_body_entered"]
+[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]
