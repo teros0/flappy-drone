@@ -43,7 +43,7 @@ obstacle_scene = ExtResource("5_tipki")
 carousel_scene = ExtResource("6_7mycd")
 lift_scene = ExtResource("7_o6xl0")
 soldier_scene = ExtResource("8_tipki")
-walls_scene = ExtResource("4_1bvp3")
+walls_scene = ExtResource("5_tipki")
 
 [node name="Ceiling" parent="." unique_id=885982045 instance=ExtResource("4_1bvp3")]
 process_mode = 4
@@ -70,7 +70,7 @@ size_flags_vertical = 2
 indeterminate = true
 editor_preview_indeterminate = false
 
-[node name="Label" type="Label" parent="HUD" unique_id=1798767414]
+[node name="TotalThrust" type="Label" parent="HUD" unique_id=1798767414]
 offset_right = 40.0
 offset_bottom = 23.0
 text = "AAAAAAAAAA"

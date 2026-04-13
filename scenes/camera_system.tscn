@@ -1,19 +1,77 @@
 [gd_scene format=3 uid="uid://6up1jwbf3ebk"]
 
-[ext_resource type="Script" uid="uid://bunye64onlv2t" path="res://scripts/camera_system.gd" id="1_y75u8"]
-[ext_resource type="Script" uid="uid://sc3k0lsj58x3" path="res://scripts/camera_2d.gd" id="2_fyf37"]
+[sub_resource type="GDScript" id="GDScript_hcjyi"]
+script/source = "extends Node2D
+
+@export var scroll_speed: float = 150.0
+@onready var camera = $Camera2D
+@onready var edge_detector = $LeftEdgeDetector
+
+signal player_fell_behind
+
+func _ready():
+	# Connect the signal to detect the player
+	edge_detector.body_entered.connect(_on_body_entered)
+	
+	# Position the edge detector at the left edge of the camera view
+	# For a standard 1152x648 window, this would be -576 on X
+	var viewport_width = get_viewport_rect().size.x
+	edge_detector.position.x = -(viewport_width / 2)
+
+func _physics_process(delta):
+	# Move the whole system right
+	position.x += scroll_speed * delta
+
+func _on_body_entered(body):
+	# Check if the thing hitting the edge is your copter/player
+	if body.name == \"Copter\": # Or use a class_name/group
+		player_fell_behind.emit()
+		print(\"Player touched the left edge!\")
+
+
+func _on_accelerate_detector_body_entered(body: Node2D) -> void:
+	if body.name == \"Copter\": # Or use a class_name/group
+		scroll_speed = 500
+		print(\"Acceleraaaaate!\")
+
+
+func _on_middle_detector_body_entered(body: Node2D) -> void:
+	if body.name == \"Copter\": # Or use a class_name/group
+		scroll_speed = 150
+		print(\"hitting mid\")
+"
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_y75u8"]
+size = Vector2(20, 1500)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_38il2"]
+size = Vector2(20, 1500)
 
 [node name="CameraSystem" type="Node2D" unique_id=1847921598]
-script = ExtResource("1_y75u8")
+script = SubResource("GDScript_hcjyi")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=687491392]
-position = Vector2(1200, 675)
+position = Vector2(1250, 750)
 editor_draw_limits = true
-script = ExtResource("2_fyf37")
 
 [node name="LeftEdgeDetector" type="Area2D" parent="." unique_id=1443158066]
+position = Vector2(0, 750)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LeftEdgeDetector" unique_id=1628259700]
 shape = SubResource("RectangleShape2D_y75u8")
+
+[node name="MiddleDetector" type="Area2D" parent="." unique_id=1134459292]
+position = Vector2(1250, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MiddleDetector" unique_id=603616651]
+position = Vector2(0, 750)
+shape = SubResource("RectangleShape2D_y75u8")
+
+[node name="AccelerateDetector" type="Area2D" parent="." unique_id=864938533]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AccelerateDetector" unique_id=2075764197]
+position = Vector2(1800, 750)
+shape = SubResource("RectangleShape2D_38il2")
+
+[connection signal="body_entered" from="MiddleDetector" to="." method="_on_middle_detector_body_entered"]
+[connection signal="body_entered" from="AccelerateDetector" to="." method="_on_accelerate_detector_body_entered"]

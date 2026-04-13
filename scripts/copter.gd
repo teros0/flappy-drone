@@ -2,18 +2,22 @@ extends RigidBody2D
 
 signal left_edge_exited
 
-@export var screen_height: float = 1500
-@export var margin: float = 0.0 # Small buffer so the sprite fully disappears before teleporting
+@onready var screen_height: float = get_viewport_rect().end.y
 
 @export var engine_power: float = 7000.0
-@export var torque_power: float = 150000.0
+@export var torque_power: float = 100000.0
 @export var weight_compensation: float = 1.2
+
+@export var effective_thrust :float = 0.0
 
 # New Throttle Logic
 @export var throttle_level: float = 0.3
 @export var throttle_step: float = 0.1
 @export var max_ramp_time: float = 1.5 # Seconds to reach 0.4
 var hold_time: float = 0.0
+
+func _ready():
+	print("DisplayServer.screen_get_size ", get_viewport_rect().end.y)
 
 func _input(event):
 	# Handle Mouse Wheel for Throttle Setting
@@ -23,7 +27,6 @@ func _input(event):
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 			throttle_level = clamp(throttle_level - throttle_step, 0.0, 1.0)
 			
-	print(throttle_level)
 
 func _physics_process(_delta):
 	var is_thrusting = false
@@ -49,17 +52,17 @@ func _physics_process(_delta):
 		
 		# 2. Apply the "Fast then Slow" curve (Square Root)
 		# Starts at 0.1, ends at 0.4
-		var curve_multiplier = 0.5 + (0.5 * sqrt(t))
+		var curve_multiplier = 0.8 + (0.6 * sqrt(t))
 		
 		# 3. Combine with your persistent throttle_level
 		# (Multiply by curve_multiplier to make the throttle feel 'damped')
-		var effective_thrust = throttle_level * curve_multiplier
+		effective_thrust = throttle_level * curve_multiplier
 		
 		var total_thrust = transform.y * -effective_thrust * engine_power * weight_compensation
 		apply_central_force(total_thrust)
 		
-		print("Current Curve Factor: ", 0.5 + (0.8 * sqrt(hold_time / max_ramp_time)))
-		print("Effective Thrust: ", effective_thrust)
+		#print("Current Curve Factor: ", 0.5 + (0.8 * sqrt(hold_time / max_ramp_time)))
+		#print("Effective Thrust: ", effective_thrust)
 	
 	if rotation_input != 0:
 		apply_torque(rotation_input * torque_power)
@@ -68,11 +71,11 @@ func _integrate_forces(state):
 	var transform = state.get_transform()
 	
 	# Check if we went off the bottom
-	if transform.origin.y > screen_height + margin:
-		transform.origin.y = -margin
+	if transform.origin.y > screen_height:
+		transform.origin.y = 0
 		state.set_transform(transform)
 		
 	# Check if we went off the top
-	elif transform.origin.y < -margin:
-		transform.origin.y = screen_height + margin
+	elif transform.origin.y < 0:
+		transform.origin.y = screen_height
 		state.set_transform(transform)

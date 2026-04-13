@@ -47,13 +47,14 @@ func _resize_body(body: StaticBody2D, height: float):
 	# Resize the Sprite
 	var sprite = body.get_node_or_null("Sprite2D")
 	if sprite and sprite.texture is GradientTexture2D:
-		sprite.texture.width = 100 # Fixed wall width
+		sprite.texture.width = 25 # Fixed wall width
 		sprite.texture.height = int(height)
 	
 	# Resize the CollisionShape
 	var col = body.get_node_or_null("CollisionShape2D")
 	if col and col.shape is RectangleShape2D:
-		col.shape.size = Vector2(100, height)
+		print("here")
+		col.shape.size = Vector2(25, height)
 		
 func _on_visible_on_screen_notifier_2d_screen_exited() -> void:
 	queue_free()

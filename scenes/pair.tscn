@@ -41,17 +41,3 @@ offset_right = 125.0
 offset_bottom = 25.0
 color = Color(1, 0.77254903, 0, 1)
 metadata/_edit_use_anchors_ = true
-
-[node name="Top2" type="ColorRect" parent="BottomGhost" unique_id=738028928]
-offset_left = -125.0
-offset_top = -25.0
-offset_right = 125.0
-color = Color(0, 0.36078432, 1, 1)
-metadata/_edit_use_anchors_ = true
-
-[node name="Bottom2" type="ColorRect" parent="BottomGhost" unique_id=36286618]
-offset_left = -125.0
-offset_right = 125.0
-offset_bottom = 25.0
-color = Color(1, 0.77254903, 0, 1)
-metadata/_edit_use_anchors_ = true
