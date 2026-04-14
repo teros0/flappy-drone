@@ -4,6 +4,7 @@ extends Node2D
 @export var burst_count: int = 3
 @export var burst_delay: float = 0.2
 @export var cooldown_time: float = 2.0
+@export var detection_radius: float = 500
 
 @onready var muzzle = $Muzzle
 @onready var detection_range = $DetectionRange
@@ -24,6 +25,9 @@ func _ready():
 	
 	cooldown_timer.one_shot = true
 	cooldown_timer.timeout.connect(_on_cooldown_finished)
+	
+	if $DetectionRange/CollisionShape2D.shape is CircleShape2D:
+		$DetectionRange/CollisionShape2D.shape.radius = detection_radius
 
 func _on_target_entered(body):
 	if body.name == "Copter":

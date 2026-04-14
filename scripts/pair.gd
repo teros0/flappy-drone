@@ -1,13 +1,22 @@
 extends Node2D
 
+signal throttle_updated(val)
+
 @onready var world_height: float = get_viewport_rect().end.y
-@export var effective_thrust2: float
 @onready var copter = $Copter
 @onready var top_ghost = $TopGhost
 @onready var bottom_ghost = $BottomGhost
 
+var throttle_value: float:
+	get:
+		return $Copter.effective_thrust
+
+# Use it like this:
+func _ready() -> void:
+	print(Utils.get_verbose_tree(get_tree().current_scene))
+	$Copter.thrust_changed.connect(func(v): throttle_updated.emit(v))
+
 func _process(_delta):
-	effective_thrust2 = $Copter.effective_thrust
 	# 1. Make ghosts mirror the real drone visually
 	# We use local positions so they stay relative to the pair
 	top_ghost.position = copter.position + Vector2(0, -world_height)

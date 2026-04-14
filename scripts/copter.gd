@@ -1,6 +1,7 @@
 extends RigidBody2D
 
 signal left_edge_exited
+signal thrust_changed(new_value)
 
 @onready var screen_height: float = get_viewport_rect().end.y
 
@@ -29,41 +30,33 @@ func _input(event):
 			
 
 func _physics_process(_delta):
-	var is_thrusting = false
-	var rotation_input = 0.0
+	var is_thrusting = Input.is_action_pressed("ui_up")
+	var rotation_input = Input.get_axis("ui_left", "ui_right")
 
-	if Input.is_action_pressed("ui_up"):
-		is_thrusting = true
-		# Increase hold_time but cap it at the max_ramp_time
+	# Always update hold_time regardless of key state
+	if is_thrusting:
 		hold_time = min(hold_time + _delta, max_ramp_time)
 	else:
-		# Reset hold_time when key is released (or use a decay for "smooth" drop)
-		hold_time = 0.0
-	
-	if Input.is_action_pressed("ui_left"):
-		rotation_input -= 1.0
-	if Input.is_action_pressed("ui_right"):
-		rotation_input += 1.0
-	
-	# Apply Thust based on persistent throttle level
+		# Spool down twice as fast as it spools up
+		hold_time = max(hold_time - (_delta * 2.0), 0.0)
+
+	# ALWAYS calculate effective_thrust so it can "die down"
+	var t = hold_time / max_ramp_time
+	var curve_multiplier = 0.8 + (0.6 * sqrt(t))
+
+	# If the engine isn't engaged, the thrust applied to physics is 0, 
+	# but the VISUAL throttle can still show the engine ramping up/down
+	effective_thrust = throttle_level * curve_multiplier
+
+	# ALWAYS emit the signal so the HUD stays in sync
+	# If you want the HUD to show 0 when not pressing 'up', 
+	# you can multiply by (1.0 if is_thrusting else 0.0)
+	thrust_changed.emit(effective_thrust if is_thrusting else 0.0)
+
 	if is_thrusting:
-		# 1. Normalize hold_time to a 0.0 - 1.0 range
-		var t = hold_time / max_ramp_time
-		
-		# 2. Apply the "Fast then Slow" curve (Square Root)
-		# Starts at 0.1, ends at 0.4
-		var curve_multiplier = 0.8 + (0.6 * sqrt(t))
-		
-		# 3. Combine with your persistent throttle_level
-		# (Multiply by curve_multiplier to make the throttle feel 'damped')
-		effective_thrust = throttle_level * curve_multiplier
-		
 		var total_thrust = transform.y * -effective_thrust * engine_power * weight_compensation
 		apply_central_force(total_thrust)
-		
-		#print("Current Curve Factor: ", 0.5 + (0.8 * sqrt(hold_time / max_ramp_time)))
-		#print("Effective Thrust: ", effective_thrust)
-	
+
 	if rotation_input != 0:
 		apply_torque(rotation_input * torque_power)
 

@@ -2,7 +2,6 @@
 
 [ext_resource type="PackedScene" uid="uid://cdayq1615h4k7" path="res://scenes/copter.tscn" id="1_4pmxj"]
 [ext_resource type="PackedScene" uid="uid://dpqdmaohmfge8" path="res://scenes/soldier.tscn" id="2_4pmxj"]
-[ext_resource type="PackedScene" uid="uid://cwm8kqjtqwp0n" path="res://scenes/wall.tscn" id="3_3vd64"]
 
 [node name="Debug" type="Node2D" unique_id=1737458756]
 
@@ -10,13 +9,3 @@
 
 [node name="Soldier" parent="." unique_id=167977945 instance=ExtResource("2_4pmxj")]
 position = Vector2(1659, 478)
-
-[node name="Wall" parent="." unique_id=885982045 instance=ExtResource("3_3vd64")]
-position = Vector2(3305, 1509.0001)
-rotation = 1.5798475
-scale = Vector2(1, -7.3996572)
-
-[node name="Wall2" parent="." unique_id=542270253 instance=ExtResource("3_3vd64")]
-position = Vector2(2768.0002, 3979)
-rotation = -0.029572368
-scale = Vector2(1, -7.3996572)

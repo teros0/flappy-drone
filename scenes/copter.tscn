@@ -14,20 +14,6 @@ script = ExtResource("1_y4ra5")
 position = Vector2(1.9073486e-06, -1.9073486e-06)
 shape = SubResource("RectangleShape2D_y4ra5")
 
-[node name="LeftEngine" type="Marker2D" parent="CollisionShape2D" unique_id=1343485609]
-position = Vector2(-6.4272223, 1.7999992)
-scale = Vector2(0.047258973, 0.19999999)
-
-[node name="LeftParticles" type="CPUParticles2D" parent="CollisionShape2D/LeftEngine" unique_id=1465188811]
-amount = 1
-
-[node name="RightEngine" type="Marker2D" parent="CollisionShape2D" unique_id=2095576321]
-position = Vector2(6.4272194, 1.7999992)
-scale = Vector2(0.047258973, 0.19999999)
-
-[node name="RightParticles" type="CPUParticles2D" parent="CollisionShape2D/RightEngine" unique_id=449680379]
-amount = 1
-
 [node name="Top" type="ColorRect" parent="." unique_id=2104320295]
 offset_left = -125.0
 offset_top = -25.0

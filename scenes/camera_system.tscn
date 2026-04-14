@@ -3,48 +3,57 @@
 [sub_resource type="GDScript" id="GDScript_hcjyi"]
 script/source = "extends Node2D
 
-@export var scroll_speed: float = 150.0
+@export var base_speed: float = 300.0
+@export var max_speed: float = 1000.0
+@export var min_speed: float = 300.0
+
+# Acceleration/Deceleration weights (Tweak these for \"feel\")
+@export var accel_weight: float = 0.1   # Higher = faster ramp up
+@export var decel_weight: float = 0.5   # Higher = faster decline (as requested)
+
+var current_scroll_speed: float = 150.0
+
 @onready var camera = $Camera2D
 @onready var edge_detector = $LeftEdgeDetector
+@onready var copter = get_tree().current_scene.get_node(\"PlayerPair/Copter\") # Update path to your drone
 
 signal player_fell_behind
 
 func _ready():
-	# Connect the signal to detect the player
 	edge_detector.body_entered.connect(_on_body_entered)
-	
-	# Position the edge detector at the left edge of the camera view
-	# For a standard 1152x648 window, this would be -576 on X
-	var viewport_width = get_viewport_rect().size.x
-	edge_detector.position.x = -(viewport_width / 2)
+	current_scroll_speed = base_speed
 
 func _physics_process(delta):
-	# Move the whole system right
-	position.x += scroll_speed * delta
+	if not copter: return
+
+	# 1. Calculate player's position relative to the camera center (0 to 1 range)
+	# viewport_width / 2 is the center. 
+	var viewport_width = get_viewport_rect().size.x
+	var player_screen_pos = camera.get_canvas_transform() * copter.global_position
+	var relative_x = player_screen_pos.x / viewport_width # 0.0 (left) to 1.0 (right)
+
+	# 2. Determine Target Speed based on X position
+	var target_speed = base_speed
+
+	if relative_x > 0.5: # Last 1/3 of the screen
+		target_speed = max_speed
+		# Smoothly move current speed toward max
+		current_scroll_speed = lerp(current_scroll_speed, target_speed, accel_weight * delta)
+	
+	elif relative_x < 0.5: # First 1/3 of the screen
+		target_speed = min_speed
+		# Decline FASTER (using decel_weight)
+		current_scroll_speed = lerp(current_scroll_speed, target_speed, decel_weight * delta)
+
+	# 3. Move the system
+	position.x += current_scroll_speed * delta
 
 func _on_body_entered(body):
-	# Check if the thing hitting the edge is your copter/player
-	if body.name == \"Copter\": # Or use a class_name/group
+	if body.name == \"Copter\":
 		player_fell_behind.emit()
-		print(\"Player touched the left edge!\")
-
-
-func _on_accelerate_detector_body_entered(body: Node2D) -> void:
-	if body.name == \"Copter\": # Or use a class_name/group
-		scroll_speed = 500
-		print(\"Acceleraaaaate!\")
-
-
-func _on_middle_detector_body_entered(body: Node2D) -> void:
-	if body.name == \"Copter\": # Or use a class_name/group
-		scroll_speed = 150
-		print(\"hitting mid\")
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_y75u8"]
-size = Vector2(20, 1500)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_38il2"]
 size = Vector2(20, 1500)
 
 [node name="CameraSystem" type="Node2D" unique_id=1847921598]
@@ -59,19 +68,3 @@ position = Vector2(0, 750)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LeftEdgeDetector" unique_id=1628259700]
 shape = SubResource("RectangleShape2D_y75u8")
-
-[node name="MiddleDetector" type="Area2D" parent="." unique_id=1134459292]
-position = Vector2(1250, 0)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="MiddleDetector" unique_id=603616651]
-position = Vector2(0, 750)
-shape = SubResource("RectangleShape2D_y75u8")
-
-[node name="AccelerateDetector" type="Area2D" parent="." unique_id=864938533]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="AccelerateDetector" unique_id=2075764197]
-position = Vector2(1800, 750)
-shape = SubResource("RectangleShape2D_38il2")
-
-[connection signal="body_entered" from="MiddleDetector" to="." method="_on_middle_detector_body_entered"]
-[connection signal="body_entered" from="AccelerateDetector" to="." method="_on_accelerate_detector_body_entered"]

@@ -12,6 +12,7 @@ radius = 1000.0
 [node name="Soldier" type="Node2D" unique_id=167977945]
 script = ExtResource("1_3ekc7")
 bullet_scene = ExtResource("2_q2rr1")
+detection_radius = 300.0
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=559007531]
 texture = SubResource("PlaceholderTexture2D_q2rr1")

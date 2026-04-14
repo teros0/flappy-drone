@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://f2n7i1j3f8it"]
 
 [ext_resource type="Script" uid="uid://ddvy2eqi05na" path="res://scripts/main.gd" id="1_choun"]
-[ext_resource type="PackedScene" uid="uid://dqyak8nrti1sa" path="res://scenes/detection-area.tscn" id="2_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://bruqmb5yosrg5" path="res://scenes/pair.tscn" id="2_ya4ey"]
 [ext_resource type="PackedScene" uid="uid://6up1jwbf3ebk" path="res://scenes/camera_system.tscn" id="3_h2yge"]
 [ext_resource type="PackedScene" uid="uid://cwm8kqjtqwp0n" path="res://scenes/wall.tscn" id="4_1bvp3"]
@@ -12,30 +11,20 @@
 [ext_resource type="PackedScene" uid="uid://dpqdmaohmfge8" path="res://scenes/soldier.tscn" id="8_tipki"]
 [ext_resource type="AudioStream" uid="uid://dclucgws7wmon" path="res://hotline_miami_02. M.O.O.N - Hydrogen.mp3" id="11_ya4ey"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eb6dy"]
+bg_color = Color(0.9597495, 0.9471881, 0.99872726, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ya4ey"]
+bg_color = Color(0.91176474, 0.31792805, 0.8238866, 1)
+
 [node name="Main" type="Node2D" unique_id=2085253712]
 script = ExtResource("1_choun")
 
 [node name="PlayerPair" parent="." unique_id=997607876 instance=ExtResource("2_ya4ey")]
 position = Vector2(1041, 371)
 
-[node name="Detect1" parent="." unique_id=394713280 instance=ExtResource("2_0xm2m")]
-visible = false
-position = Vector2(1041, 371)
-scale = Vector2(1, 5.32)
-
-[node name="Detect2" parent="." unique_id=297472663 instance=ExtResource("2_0xm2m")]
-visible = false
-position = Vector2(1493, 61)
-scale = Vector2(1, 1.7370923)
-
-[node name="Detect3" parent="." unique_id=2046889145 instance=ExtResource("2_0xm2m")]
-visible = false
-position = Vector2(1493, 731)
-scale = Vector2(1, 1.7370923)
-
 [node name="CameraSystem" parent="." unique_id=1847921598 instance=ExtResource("3_h2yge")]
 visible = false
-scroll_speed = 250.0
 
 [node name="ProceduralManager" type="Node2D" parent="." unique_id=2115554532]
 script = ExtResource("5_lquwl")
@@ -65,12 +54,17 @@ offset_left = 23.0
 offset_top = 66.0
 offset_right = 27.0
 offset_bottom = 93.0
+scale = Vector2(36.92, 1)
 size_flags_horizontal = 10
 size_flags_vertical = 2
-indeterminate = true
-editor_preview_indeterminate = false
+theme_override_styles/background = SubResource("StyleBoxFlat_eb6dy")
+theme_override_styles/fill = SubResource("StyleBoxFlat_ya4ey")
+show_percentage = false
 
 [node name="TotalThrust" type="Label" parent="HUD" unique_id=1798767414]
-offset_right = 40.0
-offset_bottom = 23.0
-text = "AAAAAAAAAA"
+offset_left = 23.0
+offset_top = 16.0
+offset_right = 210.0
+offset_bottom = 61.0
+theme_override_font_sizes/font_size = 32
+text = "ThrustValue"
