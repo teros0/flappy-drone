@@ -3,7 +3,6 @@
 [ext_resource type="Script" uid="uid://ddvy2eqi05na" path="res://scripts/main.gd" id="1_choun"]
 [ext_resource type="PackedScene" uid="uid://bruqmb5yosrg5" path="res://scenes/pair.tscn" id="2_ya4ey"]
 [ext_resource type="PackedScene" uid="uid://6up1jwbf3ebk" path="res://scenes/camera_system.tscn" id="3_h2yge"]
-[ext_resource type="PackedScene" uid="uid://cwm8kqjtqwp0n" path="res://scenes/wall.tscn" id="4_1bvp3"]
 [ext_resource type="Script" uid="uid://ccto8007rw3tg" path="res://scripts/procedural_manager.gd" id="5_lquwl"]
 [ext_resource type="PackedScene" uid="uid://dkhcapdi6g26r" path="res://scenes/construct.tscn" id="5_tipki"]
 [ext_resource type="PackedScene" uid="uid://orphofsqyd7e" path="res://scenes/carousel.tscn" id="6_7mycd"]
@@ -33,15 +32,6 @@ carousel_scene = ExtResource("6_7mycd")
 lift_scene = ExtResource("7_o6xl0")
 soldier_scene = ExtResource("8_tipki")
 walls_scene = ExtResource("5_tipki")
-
-[node name="Ceiling" parent="." unique_id=885982045 instance=ExtResource("4_1bvp3")]
-process_mode = 4
-visible = false
-
-[node name="Floor" parent="." unique_id=371298620 instance=ExtResource("4_1bvp3")]
-process_mode = 4
-visible = false
-position = Vector2(0, 1350)
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=63915258]
 stream = ExtResource("11_ya4ey")

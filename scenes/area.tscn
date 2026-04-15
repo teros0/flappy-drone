@@ -1,0 +1,37 @@
+[gd_scene format=3 uid="uid://cr1ht32810wvm"]
+
+[ext_resource type="Script" uid="uid://cjbrdhlqqicv8" path="res://area.gd" id="1_8qhwf"]
+[ext_resource type="PackedScene" uid="uid://bruqmb5yosrg5" path="res://scenes/pair.tscn" id="2_2hywi"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5jt5u"]
+size = Vector2(1000, 1000)
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_8qhwf"]
+size = Vector2(1000, 1000)
+
+[node name="Area" type="Node2D" unique_id=1021461057]
+script = ExtResource("1_8qhwf")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=979532134]
+position = Vector2(1126, 692)
+collision_layer = 0
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=384146050]
+shape = SubResource("RectangleShape2D_5jt5u")
+
+[node name="ColorRect" type="ColorRect" parent="Area2D" unique_id=420342907]
+offset_left = -500.0
+offset_top = -500.0
+offset_right = 500.0
+offset_bottom = 500.0
+color = Color(1, 1, 1, 0.18039216)
+
+[node name="Sprite2D" type="Sprite2D" parent="Area2D" unique_id=1767349820]
+visible = false
+texture = SubResource("PlaceholderTexture2D_8qhwf")
+
+[node name="PlayerPair" parent="." unique_id=997607876 instance=ExtResource("2_2hywi")]
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]
