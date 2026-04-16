@@ -13,6 +13,15 @@ func is_standalone(node: Node) -> bool:
 	# 1. If the node has no owner, it is likely the root of its own scene
 	# 2. We verify by checking if it is the current_scene in the tree
 	return node.is_inside_tree() and node.get_tree().current_scene == node
+
+
+func handle_reset(node: Node, action: StringName = &"reset") -> bool:
+	if not is_standalone(node):
+		return false
+	if not Input.is_action_just_pressed(action):
+		return false
+	node.get_tree().reload_current_scene()
+	return true
 	
 
 func get_verbose_tree(node: Node, indent: String = "") -> String:
