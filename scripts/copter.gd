@@ -17,8 +17,14 @@ signal thrust_changed(new_value)
 @export var max_ramp_time: float = 1.5 # Seconds to reach 0.4
 var hold_time: float = 0.0
 
-func _ready():
-	pass
+# Push (burst) action
+@export var push_speed: float = 2500.0
+@export var push_duration: float = 0.15
+@export var push_return_speed: float = 1800.0
+@export var push_return_duration: float = 0.12
+var push_time_left: float = 0.0
+var return_time_left: float = 0.0
+var push_direction: Vector2 = Vector2.ZERO
 
 func _input(event):
 	# Handle Mouse Wheel for Throttle Setting
@@ -28,12 +34,33 @@ func _input(event):
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 			throttle_level = clamp(throttle_level - throttle_step, 0.0, 1.0)
 			
-	if get_tree().current_scene == self:
+	if Utils.is_standalone(self):
 		if Input.is_action_just_pressed("reset"):
 			get_tree().reload_current_scene()
 
 
 func _physics_process(_delta):
+	# Handle push burst
+	if Input.is_action_just_pressed("push") and push_time_left <= 0.0 and return_time_left <= 0.0:
+		_start_push()
+
+	# The punch is a forward jab, then a quick retract.
+	if push_time_left > 0.0:
+		push_time_left -= _delta
+		linear_velocity = push_direction * push_speed
+		angular_velocity = 0.0
+		if push_time_left <= 0.0:
+			_start_return()
+		return
+
+	if return_time_left > 0.0:
+		return_time_left -= _delta
+		linear_velocity = -push_direction * push_return_speed
+		angular_velocity = 0.0
+		if return_time_left <= 0.0:
+			_end_push()
+		return
+
 	var is_thrusting = Input.is_action_pressed("ui_up")
 	var rotation_input = Input.get_axis("ui_left", "ui_right")
 
@@ -64,15 +91,34 @@ func _physics_process(_delta):
 	if rotation_input != 0:
 		apply_torque(rotation_input * torque_power)
 
+
+func _start_push() -> void:
+	# Short, strong burst forward in the copter's local "forward" direction
+	# Use -transform.y so the top of the rectangle is "forward"
+	push_direction = -transform.y.normalized()
+	linear_velocity = push_direction * push_speed
+	angular_velocity = 0.0
+	push_time_left = push_duration
+
+
+func _start_return() -> void:
+	return_time_left = push_return_duration
+
+
+func _end_push() -> void:
+	linear_velocity = Vector2.ZERO
+	angular_velocity = 0.0
+	push_direction = Vector2.ZERO
+
 func _integrate_forces(state):
-	var transform = state.get_transform()
+	var body_transform = state.get_transform()
 	
 	# Check if we went off the bottom
-	if transform.origin.y > screen_height:
-		transform.origin.y = 0
-		state.set_transform(transform)
+	if body_transform.origin.y > screen_height:
+		body_transform.origin.y = 0
+		state.set_transform(body_transform)
 		
 	# Check if we went off the top
-	elif transform.origin.y < 0:
-		transform.origin.y = screen_height
-		state.set_transform(transform)
+	elif body_transform.origin.y < 0:
+		body_transform.origin.y = screen_height
+		state.set_transform(body_transform)
