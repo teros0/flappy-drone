@@ -1,7 +1,7 @@
 extends Node
 class_name WorldWrapper
 
-@export var buffer: float = 50.0
+@export var buffer: float = 0.0
 @export var wrap_mode: WrapMode = WrapMode.BOTH
 @export var enable_bottom_redirect: bool = false
 
@@ -21,8 +21,9 @@ func _physics_process(_delta: float) -> void:
 	if not parent:
 		return
 
-	var limit_x: float = Utils.get_width()
-	var limit_y: float = Utils.get_height()
+	var viewport_size: Vector2 = parent.get_viewport_rect().size
+	var limit_x: float = viewport_size.x
+	var limit_y: float = viewport_size.y
 
 	if _wraps_vertical():
 		_wrap_vertical(parent, limit_x, limit_y)
