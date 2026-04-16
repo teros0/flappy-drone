@@ -48,8 +48,11 @@ func _physics_process(delta: float) -> void:
 	if _handle_push(delta):
 		return
 
-	var is_thrusting: bool = Input.is_action_pressed("ui_up")
-	_handle_thrust(delta, is_thrusting)
+	var is_thrusting_up: bool = Input.is_action_pressed("ui_up")
+	var is_thrusting_down: bool = Input.is_action_pressed("ui_down")
+	
+	var direction: int = 1 if is_thrusting_up else -1
+	_handle_thrust(delta, is_thrusting_up or is_thrusting_down, direction)
 	_handle_rotation()
 
 
@@ -82,7 +85,7 @@ func _handle_push(delta: float) -> bool:
 	return false
 
 
-func _handle_thrust(delta: float, is_thrusting: bool) -> void:
+func _handle_thrust(delta: float, is_thrusting: bool, direction: int) -> void:
 	# Always update hold_time regardless of key state
 	if is_thrusting:
 		hold_time = min(hold_time + delta, max_ramp_time)
@@ -102,7 +105,7 @@ func _handle_thrust(delta: float, is_thrusting: bool) -> void:
 	thrust_changed.emit(effective_thrust if is_thrusting else 0.0)
 
 	if is_thrusting:
-		var total_thrust: Vector2 = transform.y * -effective_thrust * engine_power * weight_compensation
+		var total_thrust: Vector2 = transform.y * -effective_thrust * direction * engine_power * weight_compensation
 		apply_central_force(total_thrust)
 
 
