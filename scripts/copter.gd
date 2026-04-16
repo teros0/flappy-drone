@@ -24,14 +24,6 @@ var return_time_left: float = 0.0
 var push_direction: Vector2 = Vector2.ZERO
 
 # World wrapping
-@export var wrap_buffer: float = 50.0
-@onready var world_wrapper: WorldWrapper = WorldWrapper.new()
-
-
-func _ready() -> void:
-	world_wrapper.buffer = wrap_buffer
-	add_child(world_wrapper)
-
 func _input(event):
 	# Handle Mouse Wheel for Throttle Setting
 	if event is InputEventMouseButton:

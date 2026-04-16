@@ -8,10 +8,6 @@ func _ready():
 	gravity_scale = 0.0
 	contact_monitor = true
 	max_contacts_reported = 8
-	
-	var world_wrapper := WorldWrapper.new()
-	add_child(world_wrapper)
-	print("Screen wrapping active for: ", name)
 
 
 func _integrate_forces(state: PhysicsDirectBodyState2D) -> void:

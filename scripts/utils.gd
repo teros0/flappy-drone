@@ -1,12 +1,12 @@
 extends Node
 
-static func get_screen_size() -> Vector2:
+func get_screen_size() -> Vector2:
 	return Engine.get_main_loop().root.size
 	
-static func get_width() -> float:
+func get_width() -> float:
 	return get_screen_size().x
 
-static func get_height() -> float:
+func get_height() -> float:
 	return get_screen_size().y
 	
 func is_standalone(node: Node) -> bool:
