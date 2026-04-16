@@ -1,4 +1,5 @@
 extends Node2D
+const PlayerConfigResource = preload("res://scripts/player_config.gd")
 
 @onready var ball: Node2D = $Ball
 @onready var copter: Node2D = $Copter
@@ -12,12 +13,7 @@ extends Node2D
 
 # Local coop (player 2) bootstrap.
 @export var spawn_second_player: bool = true
-@export var second_player_spawn_offset: Vector2 = Vector2(350.0, 0.0)
-@export var p2_thrust_up_action: StringName = &"p2_up"
-@export var p2_thrust_down_action: StringName = &"p2_down"
-@export var p2_rotate_left_action: StringName = &"p2_left"
-@export var p2_rotate_right_action: StringName = &"p2_right"
-@export var p2_push_action: StringName = &"p2_push"
+@export var player_configs: Array[Resource] = []
 
 var copters: Array[Node2D] = []
 
@@ -45,48 +41,69 @@ func _setup_wrappers() -> void:
 
 
 func _setup_players() -> void:
-	copters = [copter]
-	_configure_copter_inputs(copter, 1)
-
-	if not spawn_second_player:
-		return
-
-	var second_player := _ensure_second_player_exists()
-	if second_player:
-		copters.append(second_player)
-		_configure_copter_inputs(second_player, 2)
+	copters.clear()
+	var configs: Array[Resource] = _get_active_player_configs()
+	for config in configs:
+		var player_node: Node2D = _ensure_player_exists(config)
+		if player_node:
+			copters.append(player_node)
+			_apply_player_config(player_node, config)
 
 
-func _ensure_second_player_exists() -> Node2D:
-	if has_node("Copter2"):
-		return $Copter2 as Node2D
+func _get_active_player_configs() -> Array[Resource]:
+	if not player_configs.is_empty():
+		return player_configs
+
+	var defaults: Array[Resource] = []
+
+	var player_one: Resource = PlayerConfigResource.new()
+	player_one.player_id = 1
+	player_one.node_name = &"Copter"
+	player_one.spawn_offset = Vector2.ZERO
+	player_one.thrust_up_action = &"ui_up"
+	player_one.thrust_down_action = &"ui_down"
+	player_one.rotate_left_action = &"ui_left"
+	player_one.rotate_right_action = &"ui_right"
+	player_one.push_action = &"push"
+	defaults.append(player_one)
+
+	if spawn_second_player:
+		var player_two: Resource = PlayerConfigResource.new()
+		player_two.player_id = 2
+		player_two.node_name = &"Copter2"
+		player_two.spawn_offset = Vector2(350.0, 0.0)
+		player_two.thrust_up_action = &"p2_up"
+		player_two.thrust_down_action = &"p2_down"
+		player_two.rotate_left_action = &"p2_left"
+		player_two.rotate_right_action = &"p2_right"
+		player_two.push_action = &"p2_push"
+		defaults.append(player_two)
+
+	return defaults
+
+
+func _ensure_player_exists(config: Resource) -> Node2D:
+	if has_node(NodePath(config.node_name)):
+		return get_node(NodePath(config.node_name)) as Node2D
 
 	var duplicated := copter.duplicate()
 	if not (duplicated is Node2D):
 		return null
 
-	var second_player := duplicated as Node2D
-	second_player.name = "Copter2"
-	second_player.position = copter.position + second_player_spawn_offset
-	add_child(second_player)
-	return second_player
+	var new_player := duplicated as Node2D
+	new_player.name = String(config.node_name)
+	new_player.position = copter.position + config.spawn_offset
+	add_child(new_player)
+	return new_player
 
 
-func _configure_copter_inputs(copter_node: Node2D, player_number: int) -> void:
-	if player_number == 1:
-		copter_node.set("player_id", 1)
-		copter_node.set("thrust_up_action", &"ui_up")
-		copter_node.set("thrust_down_action", &"ui_down")
-		copter_node.set("rotate_left_action", &"ui_left")
-		copter_node.set("rotate_right_action", &"ui_right")
-		copter_node.set("push_action", &"push")
-	else:
-		copter_node.set("player_id", 2)
-		copter_node.set("thrust_up_action", p2_thrust_up_action)
-		copter_node.set("thrust_down_action", p2_thrust_down_action)
-		copter_node.set("rotate_left_action", p2_rotate_left_action)
-		copter_node.set("rotate_right_action", p2_rotate_right_action)
-		copter_node.set("push_action", p2_push_action)
+func _apply_player_config(copter_node: Node2D, config: Resource) -> void:
+	copter_node.set("player_id", config.player_id)
+	copter_node.set("thrust_up_action", config.thrust_up_action)
+	copter_node.set("thrust_down_action", config.thrust_down_action)
+	copter_node.set("rotate_left_action", config.rotate_left_action)
+	copter_node.set("rotate_right_action", config.rotate_right_action)
+	copter_node.set("push_action", config.push_action)
 
 
 func _attach_wrapper(target: Node2D) -> WorldWrapper:
