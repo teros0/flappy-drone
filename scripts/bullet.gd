@@ -17,12 +17,6 @@ func _on_body_entered(body):
 	queue_free()
 
 
-func _on_visible_on_screen_notifier_2d_screen_exited() -> void:
-	# Vertical wrapping intentionally lets bullets leave/re-enter the screen on Y,
-	# so we only despawn when outside horizontal world bounds.
-	_despawn_if_outside_horizontal_bounds()
-
-
 func _despawn_if_outside_horizontal_bounds() -> void:
 	var viewport_width: float = get_viewport_rect().size.x
 	var screen_pos: Vector2 = get_viewport().get_canvas_transform() * global_position
