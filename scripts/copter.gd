@@ -2,6 +2,13 @@ extends RigidBody2D
 
 signal thrust_changed(new_value)
 
+@export var player_id: int = 1
+@export var thrust_up_action: StringName = &"ui_up"
+@export var thrust_down_action: StringName = &"ui_down"
+@export var rotate_left_action: StringName = &"ui_left"
+@export var rotate_right_action: StringName = &"ui_right"
+@export var push_action: StringName = &"push"
+
 @export var engine_power: float = 7000.0
 @export var torque_power: float = 100000.0
 @export var weight_compensation: float = 1.2
@@ -40,8 +47,8 @@ func _physics_process(delta: float) -> void:
 	if _handle_push(delta):
 		return
 
-	var is_thrusting_up: bool = Input.is_action_pressed("ui_up")
-	var is_thrusting_down: bool = Input.is_action_pressed("ui_down")
+	var is_thrusting_up: bool = Input.is_action_pressed(thrust_up_action)
+	var is_thrusting_down: bool = Input.is_action_pressed(thrust_down_action)
 	
 	var direction: int = 1 if is_thrusting_up else -1
 	_handle_thrust(delta, is_thrusting_up or is_thrusting_down, direction)
@@ -53,7 +60,7 @@ func _handle_reset() -> void:
 
 
 func _handle_push(delta: float) -> bool:
-	if Input.is_action_just_pressed("push") and push_time_left <= 0.0 and return_time_left <= 0.0:
+	if Input.is_action_just_pressed(push_action) and push_time_left <= 0.0 and return_time_left <= 0.0:
 		_start_push()
 
 	# Forward jab
@@ -102,7 +109,7 @@ func _handle_thrust(delta: float, is_thrusting: bool, direction: int) -> void:
 
 
 func _handle_rotation() -> void:
-	var rotation_input: float = Input.get_axis("ui_left", "ui_right")
+	var rotation_input: float = Input.get_axis(rotate_left_action, rotate_right_action)
 	if rotation_input != 0.0:
 		apply_torque(rotation_input * torque_power)
 
