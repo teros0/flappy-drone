@@ -1,0 +1,44 @@
+[gd_scene format=3 uid="uid://b03yt8t6kuaej"]
+
+[ext_resource type="PackedScene" uid="uid://cdayq1615h4k7" path="res://scenes/copter.tscn" id="1_1fwq8"]
+[ext_resource type="Script" uid="uid://lhw4j7f5xi41" path="res://scripts/squash.gd" id="1_6kogi"]
+[ext_resource type="Script" uid="uid://dp1jxi02ouqin" path="res://scripts/ball.gd" id="2_6kogi"]
+[ext_resource type="Script" uid="uid://brj6oc7488d5y" path="res://scripts/wall.gd" id="3_1fwq8"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ii624"]
+radius = 50.0
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_s87a2"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6kogi"]
+size = Vector2(50, 1300)
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_q6rv1"]
+size = Vector2(50, 1300)
+
+[node name="Squash" type="Node2D" unique_id=714557145]
+script = ExtResource("1_6kogi")
+
+[node name="Copter" parent="." unique_id=2008944575 instance=ExtResource("1_1fwq8")]
+
+[node name="Ball" type="RigidBody2D" parent="." unique_id=834656252]
+position = Vector2(938, 422)
+script = ExtResource("2_6kogi")
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ball" unique_id=1333903295]
+shape = SubResource("CircleShape2D_ii624")
+
+[node name="Sprite2D" type="Sprite2D" parent="Ball" unique_id=623330623]
+texture = SubResource("PlaceholderTexture2D_s87a2")
+
+[node name="Wall" type="StaticBody2D" parent="." unique_id=399320970]
+position = Vector2(2402, 741)
+script = ExtResource("3_1fwq8")
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Wall" unique_id=727719577]
+shape = SubResource("RectangleShape2D_6kogi")
+
+[node name="Sprite2D" type="Sprite2D" parent="Wall" unique_id=467527202]
+texture = SubResource("PlaceholderTexture2D_q6rv1")

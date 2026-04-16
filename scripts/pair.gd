@@ -11,9 +11,7 @@ var throttle_value: float:
 	get:
 		return $Copter.effective_thrust
 
-# Use it like this:
 func _ready() -> void:
-	print(Utils.get_verbose_tree(get_tree().current_scene))
 	$Copter.thrust_changed.connect(func(v): throttle_updated.emit(v))
 
 func _process(_delta):

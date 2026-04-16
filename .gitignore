@@ -2,3 +2,5 @@
 .godot/
 /android/
 *.mp3*
+.cursorrules
+*.gd.*

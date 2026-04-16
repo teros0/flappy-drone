@@ -1,5 +1,17 @@
 extends Node
 
+static func get_screen_size() -> Vector2:
+	return Engine.get_main_loop().root.size
+	
+static func get_width() -> float:
+	return get_screen_size().x
+
+static func get_height() -> float:
+	return get_screen_size().y
+	
+static func is_separate_schene():
+	return get_tree().current_scene == self
+
 func get_verbose_tree(node: Node, indent: String = "") -> String:
 	var tree_content = _build_tree_string(node, indent)
 	

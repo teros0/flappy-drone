@@ -18,7 +18,7 @@ signal thrust_changed(new_value)
 var hold_time: float = 0.0
 
 func _ready():
-	print("DisplayServer.screen_get_size ", get_viewport_rect().end.y)
+	pass
 
 func _input(event):
 	# Handle Mouse Wheel for Throttle Setting
@@ -28,6 +28,10 @@ func _input(event):
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 			throttle_level = clamp(throttle_level - throttle_step, 0.0, 1.0)
 			
+	if get_tree().current_scene == self:
+		if Input.is_action_just_pressed("reset"):
+			get_tree().reload_current_scene()
+
 
 func _physics_process(_delta):
 	var is_thrusting = Input.is_action_pressed("ui_up")

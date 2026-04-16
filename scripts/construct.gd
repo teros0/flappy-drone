@@ -53,7 +53,6 @@ func _resize_body(body: StaticBody2D, height: float):
 	# Resize the CollisionShape
 	var col = body.get_node_or_null("CollisionShape2D")
 	if col and col.shape is RectangleShape2D:
-		print("here")
 		col.shape.size = Vector2(25, height)
 		
 func _on_visible_on_screen_notifier_2d_screen_exited() -> void:
