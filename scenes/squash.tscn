@@ -3,7 +3,12 @@
 [ext_resource type="PackedScene" uid="uid://cdayq1615h4k7" path="res://scenes/copter.tscn" id="1_1fwq8"]
 [ext_resource type="Script" uid="uid://lhw4j7f5xi41" path="res://scripts/squash.gd" id="1_6kogi"]
 [ext_resource type="Script" uid="uid://dp1jxi02ouqin" path="res://scripts/ball.gd" id="2_6kogi"]
+[ext_resource type="Script" uid="uid://bm56ajtbqh4al" path="res://scripts/squash_rules.gd" id="2_q6rv1"]
 [ext_resource type="Script" uid="uid://brj6oc7488d5y" path="res://scripts/wall.gd" id="3_1fwq8"]
+
+[sub_resource type="Resource" id="Resource_q6rv1"]
+script = ExtResource("2_q6rv1")
+metadata/_custom_type_script = "uid://bm56ajtbqh4al"
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ii624"]
 bounce = 1.0
@@ -27,6 +32,7 @@ size = Vector2(50, 1300)
 
 [node name="Squash" type="Node2D" unique_id=714557145]
 script = ExtResource("1_6kogi")
+rules = SubResource("Resource_q6rv1")
 
 [node name="Copter" parent="." unique_id=2008944575 instance=ExtResource("1_1fwq8")]
 position = Vector2(910, 1133)

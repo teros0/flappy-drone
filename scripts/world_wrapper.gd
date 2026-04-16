@@ -1,5 +1,6 @@
 extends Node
 class_name WorldWrapper
+signal wrapped(axis, edge)
 
 @export var buffer: float = 0.0
 @export var wrap_mode: WrapMode = WrapMode.BOTH
@@ -41,18 +42,22 @@ func _wraps_horizontal() -> bool:
 
 func _wrap_vertical(parent: Node2D, limit_x: float, limit_y: float) -> void:
 	if parent.global_position.y > limit_y + buffer:
+		wrapped.emit("vertical", "bottom")
 		if enable_bottom_redirect:
 			_apply_bottom_redirect(parent, limit_x, limit_y)
 		else:
 			parent.global_position.y = -buffer
 	elif parent.global_position.y < -buffer:
+		wrapped.emit("vertical", "top")
 		parent.global_position.y = limit_y + buffer
 
 
 func _wrap_horizontal(parent: Node2D, limit_x: float) -> void:
 	if parent.global_position.x > limit_x + buffer:
+		wrapped.emit("horizontal", "right")
 		parent.global_position.x = -buffer
 	elif parent.global_position.x < -buffer:
+		wrapped.emit("horizontal", "left")
 		parent.global_position.x = limit_x + buffer
 
 
@@ -72,7 +77,5 @@ func _pick_bottom_exit_side() -> ExitSide:
 	return ExitSide.RIGHT
 
 
-func _pick_spawn_y(limit_y: float, normalized_range: Vector2) -> float:
-	var min_ratio: float = clamp(min(normalized_range.x, normalized_range.y), 0.0, 1.0)
-	var max_ratio: float = clamp(max(normalized_range.x, normalized_range.y), 0.0, 1.0)
-	return randf_range(min_ratio * limit_y, max_ratio * limit_y)
+func _pick_spawn_y(limit_y: float, abs_range: Vector2) -> float:
+	return randf_range(min(abs_range.x, abs_range.y), max(abs_range.x, abs_range.y))
