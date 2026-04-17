@@ -9,6 +9,7 @@ extends Node2D
 @export var gap_width: float = 800.0      # Horizontal distance between gates
 @export var vertical_variance: float = 300
 
+signal score_gained
 
 var next_spawn_obstacle: float = 1000.0
 var next_spawn_walls: float = get_viewport_rect().size.x / 2
@@ -47,5 +48,20 @@ func spawn_obstacle():
 	
 	add_child(obs)
 	
+	var score_gate = Area2D.new()
+	var col = CollisionShape2D.new()
+	var rect = RectangleShape2D.new()
+	rect.size = Vector2(50, 10000)
+	col.shape = rect
+	score_gate.add_child(col)
+	score_gate.position = Vector2(next_spawn_obstacle, get_viewport_rect().size.y / 2)
+	score_gate.body_entered.connect(_on_score_gate_body_entered.bind(score_gate))
+	add_child(score_gate)
+	
 	# Advance the spawn pointer
 	next_spawn_obstacle += gap_width
+
+func _on_score_gate_body_entered(body: Node2D, gate: Area2D) -> void:
+	if body.name == "Copter":
+		score_gained.emit()
+		gate.queue_free()

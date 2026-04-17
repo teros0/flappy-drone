@@ -1,16 +1,28 @@
 extends Node
 
-static func get_screen_size() -> Vector2:
+func get_screen_size() -> Vector2:
 	return Engine.get_main_loop().root.size
 	
-static func get_width() -> float:
+func get_width() -> float:
 	return get_screen_size().x
 
-static func get_height() -> float:
+func get_height() -> float:
 	return get_screen_size().y
 	
-static func is_separate_schene():
-	return get_tree().current_scene == self
+func is_standalone(node: Node) -> bool:
+	# 1. If the node has no owner, it is likely the root of its own scene
+	# 2. We verify by checking if it is the current_scene in the tree
+	return node.is_inside_tree() and node.get_tree().current_scene == node
+
+
+func handle_reset(node: Node, action: StringName = &"reset") -> bool:
+	if not is_standalone(node):
+		return false
+	if not Input.is_action_just_pressed(action):
+		return false
+	node.get_tree().reload_current_scene()
+	return true
+	
 
 func get_verbose_tree(node: Node, indent: String = "") -> String:
 	var tree_content = _build_tree_string(node, indent)

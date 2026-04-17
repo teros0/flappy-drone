@@ -3,12 +3,27 @@
 [ext_resource type="PackedScene" uid="uid://cdayq1615h4k7" path="res://scenes/copter.tscn" id="1_1fwq8"]
 [ext_resource type="Script" uid="uid://lhw4j7f5xi41" path="res://scripts/squash.gd" id="1_6kogi"]
 [ext_resource type="Script" uid="uid://dp1jxi02ouqin" path="res://scripts/ball.gd" id="2_6kogi"]
+[ext_resource type="Script" uid="uid://bm56ajtbqh4al" path="res://scripts/squash_rules.gd" id="2_q6rv1"]
 [ext_resource type="Script" uid="uid://brj6oc7488d5y" path="res://scripts/wall.gd" id="3_1fwq8"]
 
+[sub_resource type="Resource" id="Resource_q6rv1"]
+script = ExtResource("2_q6rv1")
+mode = 0
+metadata/_custom_type_script = "uid://bm56ajtbqh4al"
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ii624"]
+bounce = 2.0
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_6kogi"]
+
 [sub_resource type="CircleShape2D" id="CircleShape2D_ii624"]
-radius = 50.0
+radius = 20.0
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_s87a2"]
+size = Vector2(10, 10)
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_q6rv1"]
+bounce = 1.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6kogi"]
 size = Vector2(50, 1300)
@@ -18,11 +33,37 @@ size = Vector2(50, 1300)
 
 [node name="Squash" type="Node2D" unique_id=714557145]
 script = ExtResource("1_6kogi")
+default_wrap_buffer = null
+ball_bottom_redirect_enabled = null
+ball_left_spawn_y_range = null
+ball_right_spawn_y_range = null
+spawn_second_player = null
+player_configs = null
+rules = SubResource("Resource_q6rv1")
+ball_horizontal_wrap_speed_multiplier = null
+ball_redirect_speed = null
 
 [node name="Copter" parent="." unique_id=2008944575 instance=ExtResource("1_1fwq8")]
+position = Vector2(910, 1133)
+physics_material_override = SubResource("PhysicsMaterial_ii624")
+gravity_scale = 0.5
+linear_damp = 2.0
+engine_power = 7000.0
+torque_power = 100000.0
+weight_compensation = 1.2
+effective_thrust = 0.0
+throttle_level = 0.3
+throttle_step = 0.1
+max_ramp_time = 1.5
+push_speed = 1000.0
+push_duration = 0.1
+push_return_speed = 300.0
+push_return_duration = 0.04
 
 [node name="Ball" type="RigidBody2D" parent="." unique_id=834656252]
-position = Vector2(938, 422)
+position = Vector2(1105, 1053)
+mass = 0.2
+physics_material_override = SubResource("PhysicsMaterial_6kogi")
 script = ExtResource("2_6kogi")
 metadata/_edit_group_ = true
 
@@ -33,8 +74,11 @@ shape = SubResource("CircleShape2D_ii624")
 texture = SubResource("PlaceholderTexture2D_s87a2")
 
 [node name="Wall" type="StaticBody2D" parent="." unique_id=399320970]
-position = Vector2(2402, 741)
+position = Vector2(1250, 100)
+rotation = 1.5707964
+physics_material_override = SubResource("PhysicsMaterial_q6rv1")
 script = ExtResource("3_1fwq8")
+dimensions = Vector2(50, 2000)
 metadata/_edit_group_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Wall" unique_id=727719577]
@@ -42,3 +86,19 @@ shape = SubResource("RectangleShape2D_6kogi")
 
 [node name="Sprite2D" type="Sprite2D" parent="Wall" unique_id=467527202]
 texture = SubResource("PlaceholderTexture2D_q6rv1")
+
+[node name="HUD" type="CanvasLayer" parent="." unique_id=445552897]
+
+[node name="Score" type="Label" parent="HUD" unique_id=398667612]
+offset_left = 24.0
+offset_top = 20.0
+offset_right = 64.0
+offset_bottom = 67.0
+theme_override_font_sizes/font_size = 34
+
+[node name="State" type="Label" parent="HUD" unique_id=1568478137]
+offset_left = 24.0
+offset_top = 64.0
+offset_right = 64.0
+offset_bottom = 95.0
+theme_override_font_sizes/font_size = 22

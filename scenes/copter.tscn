@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://cdayq1615h4k7"]
 
 [ext_resource type="Script" uid="uid://t18wmu6lqal0" path="res://scripts/copter.gd" id="1_y4ra5"]
+[ext_resource type="PackedScene" uid="uid://cdecogviq23nw" path="res://scenes/bullet.tscn" id="2_lgper"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_y4ra5"]
 size = Vector2(250, 50)
@@ -9,6 +10,18 @@ size = Vector2(250, 50)
 linear_damp = 1.0
 angular_damp = 2.0
 script = ExtResource("1_y4ra5")
+engine_power = null
+torque_power = null
+weight_compensation = null
+effective_thrust = null
+throttle_level = null
+throttle_step = null
+max_ramp_time = null
+push_speed = null
+push_duration = null
+push_return_speed = null
+push_return_duration = null
+wrap_buffer = null
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=549424486]
 position = Vector2(1.9073486e-06, -1.9073486e-06)
@@ -25,3 +38,5 @@ offset_left = -125.0
 offset_right = 125.0
 offset_bottom = 25.0
 color = Color(1, 0.77254903, 0, 1)
+
+[node name="Bullet" parent="." unique_id=1746382560 instance=ExtResource("2_lgper")]
