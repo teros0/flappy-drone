@@ -35,7 +35,6 @@ func _ready() -> void:
 	_setup_players()
 	_setup_wrappers()
 	_setup_scoring()
-	_create_hud()
 	_refresh_hud()
 
 func _process(_delta: float) -> void:
