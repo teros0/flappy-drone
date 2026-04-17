@@ -21,8 +21,8 @@ var copters: Array[Node2D] = []
 var scores_by_player_id: Dictionary = {}
 var last_touch_player_id: int = -1
 var game_over: bool = false
-var score_label: Label
-var state_label: Label
+@onready var score_label: Label = $HUD/Score
+@onready var state_label: Label = $HUD/State
 var ball_spawn_position: Vector2
 var active_rules: Resource
 var ball_wrapper: WorldWrapper
@@ -41,6 +41,16 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	Utils.handle_reset(self)
 
+func _setup_players() -> void:
+	copters.clear()
+	var configs: Array[Resource] = _get_active_player_configs()
+	for config in configs:
+		var player_node: Node2D = _ensure_player_exists(config)
+		if player_node:
+			copters.append(player_node)
+			_apply_player_config(player_node, config)
+			player_node.add_to_group("squash_player")
+			_ensure_score_entry(int(player_node.get("player_id")))
 
 func _setup_wrappers() -> void:
 	# Copters: standard both-axis wrap.
@@ -58,18 +68,22 @@ func _setup_wrappers() -> void:
 	if not ball_wrapper.wrapped.is_connected(_on_ball_wrapped):
 		ball_wrapper.wrapped.connect(_on_ball_wrapped)
 
+func _attach_wrapper(target: Node2D) -> WorldWrapper:
+	var existing_wrapper: WorldWrapper = _find_wrapper(target)
+	if existing_wrapper:
+		return existing_wrapper
 
-func _setup_players() -> void:
-	copters.clear()
-	var configs: Array[Resource] = _get_active_player_configs()
-	for config in configs:
-		var player_node: Node2D = _ensure_player_exists(config)
-		if player_node:
-			copters.append(player_node)
-			_apply_player_config(player_node, config)
-			player_node.add_to_group("squash_player")
-			_ensure_score_entry(int(player_node.get("player_id")))
+	var wrapper := WorldWrapper.new()
+	wrapper.buffer = default_wrap_buffer
+	target.add_child(wrapper)
+	return wrapper
 
+
+func _find_wrapper(target: Node2D) -> WorldWrapper:
+	for child in target.get_children():
+		if child is WorldWrapper:
+			return child as WorldWrapper
+	return null
 
 func _get_active_player_configs() -> Array[Resource]:
 	if not player_configs.is_empty():
@@ -200,22 +214,6 @@ func _init_rules() -> void:
 	active_rules = SquashRulesResource.new()
 
 
-func _create_hud() -> void:
-	var hud := CanvasLayer.new()
-	hud.name = "SquashHUD"
-	add_child(hud)
-
-	score_label = Label.new()
-	score_label.position = Vector2(24, 20)
-	score_label.add_theme_font_size_override("font_size", 34)
-	hud.add_child(score_label)
-
-	state_label = Label.new()
-	state_label.position = Vector2(24, 64)
-	state_label.add_theme_font_size_override("font_size", 22)
-	hud.add_child(state_label)
-
-
 func _refresh_hud() -> void:
 	if not score_label or not state_label:
 		return
@@ -251,9 +249,30 @@ func _get_last_touch_text() -> String:
 	return "P%d" % last_touch_player_id
 
 
+@export var ball_horizontal_wrap_speed_multiplier: float = 1.2
+
+@export var ball_redirect_speed: float = 1200.0
+
+func _shoot_ball_towards_center_deferred() -> void:
+	call_deferred("_shoot_ball_towards_center")
+
+func _shoot_ball_towards_center() -> void:
+	if not (ball is RigidBody2D):
+		return
+	var vp_size = get_viewport_rect().size
+	var center = Vector2(vp_size.x * 0.5, vp_size.y * 0.5)
+	var dir = (center - ball.global_position).normalized()
+	ball.set_deferred("linear_velocity", dir * ball_redirect_speed)
+
 func _on_ball_wrapped(axis: String, edge: String) -> void:
 	if game_over:
 		return
+		
+	if axis == "horizontal":
+		if ball is RigidBody2D:
+			ball.linear_velocity.x *= ball_horizontal_wrap_speed_multiplier
+		return
+		
 	if axis != "vertical" or edge != "bottom":
 		return
 
@@ -263,15 +282,19 @@ func _on_ball_wrapped(axis: String, edge: String) -> void:
 			_award_point(1, -active_rules.points_lost_on_bottom_miss)
 			_refresh_hud()
 			_reset_rally(1)
+		else:
+			_shoot_ball_towards_center_deferred()
 		return
 
 	# Versus: only count bottom passes while someone is expected to return.
 	if pending_receiver_player_id <= 0:
+		_shoot_ball_towards_center_deferred()
 		return
 
 	bottom_pass_count_since_wall += 1
 	if bottom_pass_count_since_wall < active_rules.bottom_passes_before_miss:
 		_refresh_hud()
+		_shoot_ball_towards_center_deferred()
 		return
 
 	var scorer_player_id: int = _get_other_player_id(pending_receiver_player_id)
@@ -331,21 +354,3 @@ func _reset_rally(loser_id: int) -> void:
 	pending_receiver_player_id = -1
 	bottom_pass_count_since_wall = 0
 	_refresh_hud()
-
-
-func _attach_wrapper(target: Node2D) -> WorldWrapper:
-	var existing_wrapper: WorldWrapper = _find_wrapper(target)
-	if existing_wrapper:
-		return existing_wrapper
-
-	var wrapper := WorldWrapper.new()
-	wrapper.buffer = default_wrap_buffer
-	target.add_child(wrapper)
-	return wrapper
-
-
-func _find_wrapper(target: Node2D) -> WorldWrapper:
-	for child in target.get_children():
-		if child is WorldWrapper:
-			return child as WorldWrapper
-	return null

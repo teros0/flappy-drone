@@ -8,10 +8,11 @@
 
 [sub_resource type="Resource" id="Resource_q6rv1"]
 script = ExtResource("2_q6rv1")
+mode = 0
 metadata/_custom_type_script = "uid://bm56ajtbqh4al"
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ii624"]
-bounce = 1.0
+bounce = 2.0
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_6kogi"]
 
@@ -32,7 +33,15 @@ size = Vector2(50, 1300)
 
 [node name="Squash" type="Node2D" unique_id=714557145]
 script = ExtResource("1_6kogi")
+default_wrap_buffer = null
+ball_bottom_redirect_enabled = null
+ball_left_spawn_y_range = null
+ball_right_spawn_y_range = null
+spawn_second_player = null
+player_configs = null
 rules = SubResource("Resource_q6rv1")
+ball_horizontal_wrap_speed_multiplier = null
+ball_redirect_speed = null
 
 [node name="Copter" parent="." unique_id=2008944575 instance=ExtResource("1_1fwq8")]
 position = Vector2(910, 1133)
@@ -77,3 +86,19 @@ shape = SubResource("RectangleShape2D_6kogi")
 
 [node name="Sprite2D" type="Sprite2D" parent="Wall" unique_id=467527202]
 texture = SubResource("PlaceholderTexture2D_q6rv1")
+
+[node name="HUD" type="CanvasLayer" parent="." unique_id=445552897]
+
+[node name="Score" type="Label" parent="HUD" unique_id=398667612]
+offset_left = 24.0
+offset_top = 20.0
+offset_right = 64.0
+offset_bottom = 67.0
+theme_override_font_sizes/font_size = 34
+
+[node name="State" type="Label" parent="HUD" unique_id=1568478137]
+offset_left = 24.0
+offset_top = 64.0
+offset_right = 64.0
+offset_bottom = 95.0
+theme_override_font_sizes/font_size = 22
